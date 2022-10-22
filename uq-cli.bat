@@ -6,8 +6,8 @@
 
 @REM Setting up backend and frontend directories
 @REM (Assumes this batch job file is inside UrQuery base folder)
-set BACKEND_DIR=.\urquery-backend
-set FRONTEND_DIR=.\urquery_frontend
+set BACKEND_DIR=urquery-backend
+set FRONTEND_DIR=urquery_frontend
 
 set command=%1
 
