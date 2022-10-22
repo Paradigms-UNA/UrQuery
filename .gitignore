@@ -1,0 +1,59 @@
+####### JAVASCRIPT REACT APP #######
+
+# dependencies
+/urquery_frontend/node_modules
+/urquery_frontend/.pnp
+/urquery_frontend.pnp.js
+
+# testing
+/urquery_frontend/coverage
+
+# production
+/urquery_frontend/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+####### JAVA SPRING BOOT #######
+
+HELP.md
+/urquery-backend/target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+/urquery-backend/.apt_generated
+/urquery-backend/.classpath
+/urquery-backend/.factorypath
+/urquery-backend/.project
+/urquery-backend/.settings
+/urquery-backend/.springBeans
+/urquery-backend/.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/

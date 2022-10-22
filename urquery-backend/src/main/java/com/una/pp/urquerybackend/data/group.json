@@ -1,0 +1,25 @@
+{
+  "work-team":
+  [
+    {
+      "name": "Elias Arias Muñoz"
+    },
+    {
+      "name": "Jose Andres Lopez Cruz"
+    },
+    {
+      "name": "Carlos Albornoz Rondon"
+    },
+    {
+      "name": "Jose Joaquin Garcia Ramirez"
+    }
+  ],
+
+  "about": {
+    "course": "Paradigmas de Programación EIF-400",
+    "semester": "II semestre 2022",
+    "school": "Escuela de Informatica",
+    "college": "Universidad de informatica"
+  }
+
+}
