@@ -1,10 +1,11 @@
 package com.una.pp.urquerybackend.services;
 
-import com.una.pp.urquerybackend.data.Documents;
+import com.una.pp.urquerybackend.data.DocumentRepository;
 import com.una.pp.urquerybackend.logic.Document;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,12 @@ import java.io.IOException;
 @Service
 public class ServiceApp {
 
+    private DocumentRepository repository;
+    @Autowired
+    public ServiceApp(DocumentRepository documentRepository){
+        this.repository = documentRepository;
+    }
+
     public JSONObject about() throws IOException, ParseException {
         JSONParser parser = new JSONParser();
         FileReader reader = new FileReader(new File("target/classes/data/group.json").getAbsolutePath());
@@ -24,11 +31,11 @@ public class ServiceApp {
     }
 
     public String search(String id) throws NotFoundException {
-        for (Document d : Documents.instance().getDocuments()) {
-            if (d.getId().equals(id)) {
-                return d.getData();
-            }
-        }
-        throw new NotFoundException();
+        return repository.getDocuments()
+                .stream()
+                .filter(document -> document.getId().equals(id))
+                .findFirst()
+                .orElseThrow( () -> new NotFoundException())
+                .getData();
     }
 }
