@@ -1,15 +1,15 @@
 ####### JAVASCRIPT REACT APP #######
 
 # dependencies
-/urquery_frontend/node_modules
-/urquery_frontend/.pnp
-/urquery_frontend.pnp.js
+urquery_frontend/node_modules/**
+./urquery_frontend/.pnp
+./urquery_frontend.pnp.js
 
 # testing
-/urquery_frontend/coverage
+./urquery_frontend/coverage
 
 # production
-/urquery_frontend/build
+./urquery_frontend/build/**
 
 # misc
 .DS_Store
@@ -25,19 +25,20 @@ yarn-error.log*
 ####### JAVA SPRING BOOT #######
 
 HELP.md
-/urquery-backend/target/
+urquery-backend/target/**
+urquery-backend/src/resoruces/public/**
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
 ### STS ###
-/urquery-backend/.apt_generated
-/urquery-backend/.classpath
-/urquery-backend/.factorypath
-/urquery-backend/.project
-/urquery-backend/.settings
-/urquery-backend/.springBeans
-/urquery-backend/.sts4-cache
+./urquery-backend/.apt_generated
+./urquery-backend/.classpath
+./urquery-backend/.factorypath
+./urquery-backend/.project
+./urquery-backend/.settings
+./urquery-backend/.springBeans
+./urquery-backend/.sts4-cache
 
 ### IntelliJ IDEA ###
 .idea
@@ -57,3 +58,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+########### SWI PROLOG SERVER ############
+
+# Ignore the httpd log file
+*.log
