@@ -14,13 +14,13 @@ set command=%1
 
 if "%command%" == "clean" goto opt_clean
 if "%command%" == "build" goto opt_compile
-if "%command%" == "run" goto opt_run
+if "%command%" == "exec" goto opt_exec
 
 @echo Incorrect Option: '%command%'. Available commands:
 @echo   clean           Cleans React dependencies, build folder and SpringBoot Project.
 @echo   build           Downloads dependencies, generates bundled React Project 
 @echo                   and compiles SpringBoot App.
-@echo   run             Runs the SpringBoot app (PORT 8080) and Prolog Server (8000).
+@echo   exec            Runs the SpringBoot app (PORT 8080) and Prolog Server (8000).
 
 exit /B
 
@@ -37,16 +37,20 @@ exit /B
 @echo off
 @call mvn clean
 @popd
+@echo [+] Cleaning done, Goodbye!
+
 goto final
 
 :opt_compile
 @echo on 
 @echo ================= Downloading Npm dependencies... ======================
 @pushd %FRONTEND_DIR%
+@timeout 2
 @call npm install
 
 
 @echo ================== Building react app... ====================
+@timeout 2
 @call npm run build
 
 @echo ===== Moving built frontend into Java Backend... ======
@@ -58,26 +62,29 @@ goto final
 @move %FRONTEND_DIR%\build %BACKEND_DIR%\src\main\resources\public
 
 @echo ========== Building .jar of the SpringBoot app with its dependencies ==============
+@timeout 2
 @pushd %BACKEND_DIR%
 @call mvn install spring-boot:repackage
 @popd
 
 @cls
-@echo [+] Compiling of the solution Done. 
+@echo [+] Compiling of the solution Done. Goodbye!  
 goto final
 
 
-:opt_run
-@REM Start a new cmd process to run the prolog server
+:opt_exec
+@REM Start a new cmd process to exec the prolog server
 @echo ================= Starting Prolog Server [port 8000] ==============
+@timeout 2
 @start swipl simple_service_server.pl
 
 @REM Then start the SpringBoot Server
 @echo ============= Starting the SpringBoot Server [Port 8080] =============
+@timeout 2
 @echo [+] To finish it press CTRL + C and Y
 @call java -jar %BACKEND_DIR%\target\urquery-backend-0.0.1-SNAPSHOT.jar
 
+goto final
 
-@REM final of the tool
 :final
-@echo [+] Goodbye! 
+@REM final of the tool, does nothing
