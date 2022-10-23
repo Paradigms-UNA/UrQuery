@@ -11,7 +11,7 @@ import compileService from './service/compileService.mjs';
 import documentService from './service/documentService.mjs';
 import { ResultArea } from './components/ResultArea';
 import { Modal } from './components/Modal';
-import aboutService from './service/aboutService.mjs';
+import aboutService from './service/aboutService';
 
 /**
  * TODO Components to program:
