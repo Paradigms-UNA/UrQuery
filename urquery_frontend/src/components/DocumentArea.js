@@ -6,7 +6,7 @@ import React from 'react'
 const componentName='LA';
 
 
-export const DocumentArea = ({onChange, documentXml}) => {
+export const DocumentArea = ({onChange, documentXml}) => { 
 
     const handleLoadChange = (value) => {
         onChange(componentName, value);
