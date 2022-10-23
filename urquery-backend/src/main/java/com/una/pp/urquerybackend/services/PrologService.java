@@ -1,47 +1,46 @@
 package com.una.pp.urquerybackend.services;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Collections;
+import java.net.URISyntaxException;
+import java.util.*;
 
 @Service
 public class PrologService {
-    
-    public boolean connectionTest() {
+
+    private static PrologService prologService;
+
+
+    public static PrologService instance() {
+        if (prologService == null) {
+            prologService = new PrologService();
+        }
+        return prologService;
+    }
+
+    public boolean connectionTest() throws URISyntaxException, IOException, InterruptedException {
+
+        String url = "http://localhost:8000/add";
 
         try {
-            URL url = new URL("https://localhost:8000");
-            String postData = "{\"a\":1, \"b\":2}";
+            HttpHeaders headers = new HttpHeaders();    // se crean los headers
+            headers.setContentType(MediaType.APPLICATION_JSON);   // seleccion del tipo de contenido
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON)); // acepta el tipo de headers
 
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("Content-Length", Integer.toString(postData.length()));
-            conn.setUseCaches(false);
+            String data = "{\"a\":1, \"b\":2 }"; //se simula la creacion de un documento json
 
-            try (DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
-                dos.writeBytes(postData);
-            }
+            HttpEntity entity = new HttpEntity<>(data, headers); // se crea el request
 
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(
-                    conn.getInputStream()))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    System.out.println(line);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            RestTemplate e = new RestTemplate(); // permite consumir servicios Restful
+            e.postForObject(url, entity, Object.class); // se envia el POST request
+
+            return true;
+        } catch (Exception e){
+            System.out.println("Error conectando con el servidor");
+            return false;
         }
-        return false;
     }
 }
