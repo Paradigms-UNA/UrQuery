@@ -1,6 +1,7 @@
 package com.una.pp.urquerybackend.api;
 
 import com.una.pp.urquerybackend.logic.DataCompile;
+import com.una.pp.urquerybackend.services.PrologService;
 import com.una.pp.urquerybackend.services.ServiceApp;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -36,14 +37,21 @@ public class Controller {
     }
 
     @PostMapping(path = "/compile")
-    public JSONObject compile(@RequestBody DataCompile data){
-        Long datetime = System.currentTimeMillis();
-        Timestamp timestamp = new Timestamp(datetime);
-        JSONObject obj = new JSONObject();
-        String info = "" + timestamp + " " + data.getData();
-        obj.put("data", info);
+    public JSONObject compile(@RequestBody DataCompile data) {
 
-        return obj;
+        try {
+            if (PrologService.instance().connectionTest()) {
+                Long datetime = System.currentTimeMillis();
+                Timestamp timestamp = new Timestamp(datetime);
+                JSONObject obj = new JSONObject();
+                String info = "" + timestamp + " " + data.getData();
+                obj.put("data", info);
+                return obj;
+            }
+            throw new Exception();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "No connection with Prolog Server");
+        }
     }
 
 }

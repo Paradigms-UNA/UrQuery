@@ -14,8 +14,7 @@ import java.net.URISyntaxException;
 @SpringBootApplication
 public class UrqueryBackendApplication {
 	public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
-		//SpringApplication.run(UrqueryBackendApplication.class, args);
-		PrologService.instance().connectionTest();
+		SpringApplication.run(UrqueryBackendApplication.class, args);
 	}
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
@@ -23,9 +22,6 @@ public class UrqueryBackendApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**");
-//				registry.addMapping("/api/una").allowedOrigins("http://localhost:3000");
-//				registry.addMapping("/api/una/compile").allowedOrigins("http://localhost:3000");
-//				registry.addMapping("/api/una/document/").allowedOrigins("http://localhost:3000");
 			}
 		};
 	}
