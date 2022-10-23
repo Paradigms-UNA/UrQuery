@@ -5,7 +5,10 @@ import com.una.pp.urquerybackend.services.ServiceApp;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
@@ -25,7 +28,11 @@ public class Controller {
 
     @RequestMapping(value = "document/{DDDD}")
     public String search(@PathVariable String DDDD) {
-        return service.search(DDDD);
+        try {
+            return service.search(DDDD);
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document Not Found");
+        }
     }
 
     @PostMapping(path = "/compile")

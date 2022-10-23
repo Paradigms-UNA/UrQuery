@@ -1,6 +1,8 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Navbar } from './components/Navbar';
 import { EditingArea } from './components/EditingArea';
 import { DocumentArea } from './components/DocumentArea';
@@ -47,10 +49,15 @@ const App = () => {
 
     //Change this once the SpringBoot Server is done
     if (compiling) {
-      compileService.compile(code)
-        .then(response => setResult(response.data.data))
-        .then(setCompiling(false))
-        .catch(err => console.log(err))
+      if (!!code && !!xml) {
+        compileService.compile(code)
+            .then(response => setResult(response.data.data))
+            .then(setCompiling(false))
+            .catch(err => toast.error("El request a sufrido un error"))
+      } else {
+        setCompiling(false);
+        toast.error("Para compilar debe tener codigo en el Editing Area y Document Area");
+      }
     }
   }, [compiling, code])
 
@@ -61,17 +68,16 @@ const App = () => {
       documentService.loading("1")
         .then(response => setXml(response.data))
         .then(setLoading(false))
-        .catch(err => console.log(err))
+        .catch(err => toast.error(err.response?.status))
     }
-    //loading ? setTimeout(() => {setXml(documentService.loading(xml)); setLoading(false);}, 3000) : setResult('');
 
-    //console.log(xml)
   }, [loading])
 
 
   return (
     <div className='container-fluid spa'>
       <Navbar />
+      <ToastContainer/>
       <div className='row h-50'>
         <div className='col lside'>
 
