@@ -39,7 +39,7 @@ public class PrologService {
 
             return true;
         } catch (Exception e){
-            System.out.println("Error conectando con el servidor");
+            System.out.println("Prolog Server seems to be down");
             return false;
         }
     }

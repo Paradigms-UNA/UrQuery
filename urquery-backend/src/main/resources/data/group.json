@@ -1,5 +1,5 @@
 {
-  "work-team":
+  "workTeam":
   [
     {
       "name": "Elias Arias Muñoz"
@@ -15,11 +15,11 @@
     }
   ],
 
-  "about": {
-    "course": "Paradigmas de Programación EIF-400",
-    "semester": "II semestre 2022",
-    "school": "Escuela de Informatica",
-    "college": "Universidad de informatica"
-  }
+  "aboutCourse": [
+    "Programming Paradigms EIF-400",
+    "II Semester - 2022",
+    "Informatics School",
+    "National University of Costa Rica"
+  ]
 
 }

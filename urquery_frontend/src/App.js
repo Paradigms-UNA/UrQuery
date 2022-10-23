@@ -11,21 +11,6 @@ import compileService from './service/compileService.mjs';
 import documentService from './service/documentService.mjs';
 import { ResultArea } from './components/ResultArea';
 
-/**
- * TODO Components to program:
- * -> Navbar exists but, we have to do the click button logic (the aboutService.js)
- * -> DA make from 0, also do the documentService.js, which should connect with the /document/DDDD service 
- *    -- Must render the load button which triggers the call to the service
- * 
- * -> EA make from 0, also do the compileService.js file.
- *     --- must render the compile button, which triggers logic
- *  
- * -> RA make from 0, must listen to the change of the value in EA. 
- *    -- Probably using "useContext" hook
- *    -- After EA and DA are complete
- * 
- */
-
 const App = () => {
 
   const [code, setCode] = useState(null);
@@ -38,25 +23,30 @@ const App = () => {
     target === 'EA' ? setCode(value) : setXml(value);
   }
 
+  const showError = (statusCode) => {
+    console.log(statusCode);
+    let message = '';
+    switch(statusCode)  {
+      case 404: message = 'Document Not Found'; break;
+      case 500: message = 'Prolog Connection Error'; break;
+      default: message = 'Unkown Error';
+    }
+    toast.error(message);
+  }
 
   useLayoutEffect(() => {
     //Validate is compiling
-
-    // Validate there's something in DA - Sprint 2
-
-    // Validate if the script is compiled - Sprint 2
-
 
     //Change this once the SpringBoot Server is done
     if (compiling) {
       if (!!code && !!xml) {
         compileService.compile(code)
-            .then(response => setResult(response.data.data))
-            .then(setCompiling(false))
-            .catch(err => toast.error("El request a sufrido un error"))
+          .then(response => setResult(response.data.data))
+          .then(setCompiling(false))
+          .catch(err => showError(err.response.status))
       } else {
         setCompiling(false);
-        toast.error("Para compilar debe tener codigo en el Editing Area y Document Area");
+        toast.error("There has to be code in Editing Area and XML in Document Area");
       }
     }
   }, [compiling, code])
@@ -65,19 +55,20 @@ const App = () => {
 
     if (loading) {
       // TODO Change to get from an input
-      documentService.loading("1")
+      documentService.loading('111')
+        .then( response => setResult(response.data.data))
         .then(response => setXml(response.data))
         .then(setLoading(false))
-        .catch(err => toast.error(err.response?.status))
+        .catch(err =>  showError(err.response.status))
     }
 
-  }, [loading])
+  }, [loading, xml])
 
 
   return (
     <div className='container-fluid spa'>
       <Navbar />
-      <ToastContainer/>
+      <ToastContainer />
       <div className='row h-50'>
         <div className='col lside'>
 
@@ -93,7 +84,7 @@ const App = () => {
 
         </div>
         <div className='col rside d-flex align-items-center'>
-            <ResultArea res={result}></ResultArea>
+          <ResultArea res={result}></ResultArea>
         </div>
       </div>
     </div>
