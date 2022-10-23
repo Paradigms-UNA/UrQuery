@@ -10,6 +10,8 @@ import { useState, useLayoutEffect } from 'react';
 import compileService from './service/compileService.mjs';
 import documentService from './service/documentService.mjs';
 import { ResultArea } from './components/ResultArea';
+import { Modal } from './components/Modal';
+import aboutService from './service/aboutService.mjs';
 
 /**
  * TODO Components to program:
@@ -37,6 +39,9 @@ const App = () => {
   const onEditorsChange = (target, value) => {
     target === 'EA' ? setCode(value) : setXml(value);
   }
+
+ aboutService.about()
+      .then(response => console.log(response))
 
 
   useLayoutEffect(() => {
@@ -77,6 +82,7 @@ const App = () => {
   return (
     <div className='container-fluid spa'>
       <Navbar />
+      <Modal/>
       <ToastContainer/>
       <div className='row h-50'>
         <div className='col lside'>
