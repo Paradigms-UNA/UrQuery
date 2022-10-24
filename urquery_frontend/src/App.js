@@ -6,10 +6,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Navbar } from './components/Navbar';
 import { EditingArea } from './components/EditingArea';
 import { DocumentArea } from './components/DocumentArea';
-import { useState, useLayoutEffect } from 'react';
+import {useState, useLayoutEffect, useRef} from 'react';
 import compileService from './service/compileService.mjs';
 import documentService from './service/documentService.mjs';
 import { ResultArea } from './components/ResultArea';
+import {type} from "@testing-library/user-event/dist/type";
 
 const App = () => {
 
@@ -18,6 +19,7 @@ const App = () => {
   const [xml, setXml] = useState('');
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState('');
+  const [idDocument,setIdDocument] = useState(null);
 
   const onEditorsChange = (target, value) => {
     target === 'EA' ? setCode(value) : setXml(value);
@@ -54,13 +56,19 @@ const App = () => {
   useLayoutEffect(() => {
 
     if (loading) {
-      // TODO Change to get from an input
-      documentService.loading('111')
-        .then( response => setResult(response.data.data))
-        .then(response => setXml(response.data))
-        .then(setLoading(false))
-        .catch(err =>  showError(err.response.status))
+      if(!!idDocument){
+        // TODO Change to get from an input
+        documentService.loading(idDocument)
+            .then(response => setXml(response.data))
+            .then(setLoading(false))
+            .catch(err =>  showError(err.response.status))
+      }
+      else {
+        setLoading(false);
+        toast.error("You should complete Document ID field");
+      }
     }
+
 
   }, [loading, xml])
 
@@ -71,10 +79,13 @@ const App = () => {
       <ToastContainer />
       <div className='row h-50'>
         <div className='col lside'>
-
           <div>
             <DocumentArea onChange={onEditorsChange} documentXml={xml} />
             <button className='btn btn-success mb-2' onClick={() => setLoading(true)}>{loading ? 'en desarrollo' : 'Load'}</button>
+            <input  style={{marginLeft: "30px"}} type="text" className="rounded-input-block"
+                   onChange={(e) => setIdDocument(e.target.value)}
+                   placeholder="Document ID">
+            </input>
           </div>
 
           <div>
