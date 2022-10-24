@@ -41,7 +41,7 @@ const App = () => {
 
     //Change this once the SpringBoot Server is done
     if (compiling) {
-      if (!!code && !!xml) {
+      if (!!code) {
         compileService.compile(code)
           .then(response => setResult(response.data.data))
           .then(setCompiling(false))
@@ -57,7 +57,6 @@ const App = () => {
 
     if (loading) {
       if(!!idDocument){
-        // TODO Change to get from an input
         documentService.loading(idDocument)
             .then(response => setXml(response.data))
             .then(setLoading(false))
