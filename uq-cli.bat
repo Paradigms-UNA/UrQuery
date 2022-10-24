@@ -53,8 +53,11 @@ goto final
 @timeout 2
 @call npm run build
 
-@echo ===== Copying built frontend into Java Backend... ======
+@echo ======== Cleaning Last Build in Resources Directory =========
 @popd
+@rmdir /S /Q %BACKEND_DIR%\src\main\resources\public
+
+@echo ===== Copying built frontend into Java Backend... ======
 
 @REM Moves the generated build folder that containts the react app
 @REM into a new folder under the resources directory, where
