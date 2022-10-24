@@ -23,24 +23,24 @@ public class Controller {
     private ServiceApp service;
 
     @GetMapping(path = "/about")
-    public JSONObject about() throws IOException, ParseException {  //despliega un json con la informacion de los integrantes
-        return service.about();
+    public JSONObject about() throws IOException, ParseException {  //method to load work team and course information
+        return service.about(); // call to the service to execute the method about
     }
 
     @RequestMapping(value = "document/{DDDD}")
-    public String search(@PathVariable String DDDD) {
+    public String search(@PathVariable String DDDD) { //method to search an specific dcoument stored in the server
         try {
-            return service.search(DDDD);
+            return service.search(DDDD); // call to the service to execute the method search
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document Not Found");
         }
     }
 
     @PostMapping(path = "/compile")
-    public JSONObject compile(@RequestBody DataCompile data) {
+    public JSONObject compile(@RequestBody DataCompile data) {  // method to analize the semanthic and sintaxis of a document
 
         try {
-            if (PrologService.instance().connectionTest()) {
+            if (PrologService.instance().connectionTest()) { // if the connection with the server is succesful
                 Long datetime = System.currentTimeMillis();
                 Timestamp timestamp = new Timestamp(datetime);
                 JSONObject obj = new JSONObject();

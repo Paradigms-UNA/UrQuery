@@ -21,15 +21,15 @@ public class ServiceApp {
         this.repository = documentRepository;
     }
 
-    public JSONObject about() throws IOException, ParseException {
+    public JSONObject about() throws IOException, ParseException { // method to load work team and course information
         JSONParser parser = new JSONParser();
-        FileReader reader = new FileReader(new File("target/classes/data/group.json").getAbsolutePath());
+        FileReader reader = new FileReader(new File("target/classes/data/group.json").getAbsolutePath()); // file location
         Object obj = parser.parse(reader);
         JSONObject pJsonObj = (JSONObject) obj;
         return pJsonObj;
     }
 
-    public String search(String id) throws NotFoundException {
+    public String search(String id) throws NotFoundException {   // method to search a document from the server
         return repository.getDocuments()
                 .stream()
                 .filter(document -> document.getId().equals(id))

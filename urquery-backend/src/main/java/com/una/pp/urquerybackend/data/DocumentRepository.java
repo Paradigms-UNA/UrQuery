@@ -7,7 +7,8 @@ import java.util.*;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DocumentRepository {
+public class DocumentRepository {  //this class han been created to save the information of supposed documents stored
+                                   // in a database
 
     private static DocumentRepository uniqueInstance;
 

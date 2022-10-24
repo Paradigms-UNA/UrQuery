@@ -26,16 +26,16 @@ public class PrologService {
         String url = "http://localhost:8000/add";
 
         try {
-            HttpHeaders headers = new HttpHeaders();    // se crean los headers
-            headers.setContentType(MediaType.APPLICATION_JSON);   // seleccion del tipo de contenido
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON)); // acepta el tipo de headers
+            HttpHeaders headers = new HttpHeaders();    // headers are created
+            headers.setContentType(MediaType.APPLICATION_JSON);   // data type selection
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON)); // data type accept
 
-            String data = "{\"a\":1, \"b\":2 }"; //se simula la creacion de un documento json
+            String data = "{\"a\":1, \"b\":2 }";
 
-            HttpEntity entity = new HttpEntity<>(data, headers); // se crea el request
+            HttpEntity entity = new HttpEntity<>(data, headers); // request is created
 
-            RestTemplate e = new RestTemplate(); // permite consumir servicios Restful
-            e.postForObject(url, entity, Object.class); // se envia el POST request
+            RestTemplate e = new RestTemplate(); // permit consume Resful services
+            e.postForObject(url, entity, Object.class); // POST request is send
 
             return true;
         } catch (Exception e){
