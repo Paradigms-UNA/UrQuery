@@ -1,7 +1,6 @@
 package com.una.pp.urquerybackend.services;
 
 import com.una.pp.urquerybackend.data.DocumentRepository;
-import com.una.pp.urquerybackend.logic.Document;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;

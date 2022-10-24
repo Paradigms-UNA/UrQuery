@@ -6,11 +6,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Navbar } from './components/Navbar';
 import { EditingArea } from './components/EditingArea';
 import { DocumentArea } from './components/DocumentArea';
-import {useState, useLayoutEffect, useRef} from 'react';
+import {useState, useLayoutEffect} from 'react';
 import compileService from './service/compileService.mjs';
 import documentService from './service/documentService.mjs';
 import { ResultArea } from './components/ResultArea';
-import {type} from "@testing-library/user-event/dist/type";
 
 const App = () => {
 
@@ -39,7 +38,6 @@ const App = () => {
   useLayoutEffect(() => {
     //Validate is compiling
 
-    //Change this once the SpringBoot Server is done
     if (compiling) {
       if (!!code) {
         compileService.compile(code)
@@ -48,7 +46,7 @@ const App = () => {
           .catch(err => showError(err.response.status))
       } else {
         setCompiling(false);
-        toast.error("There has to be code in Editing Area and XML in Document Area");
+        toast.error("There has to be code in Editing Area to compile");
       }
     }
   }, [compiling, code])
