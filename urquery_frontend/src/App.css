@@ -1,56 +1,46 @@
 /* Custom CSS */
+@import url("https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap");
 
 body {
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-}
-
-.lside {
-    height: 92vh;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #B8F4B3;
-}
-
-.rside {
-    height: 92vh;
-    background: rgba(59, 148, 132, 0.96);
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
 }
 
 /* Navbar */
 nav {
-    background-color: #DBF7F9;
-    height: 8vh;
+  background-color: #353535 !important;
 }
 
-/* Override BS button warning */
-.btn-warning,
-.btn-warning:hover,
-.btn-warning:active,
-.btn-warning:visited {
-    background-color: #FAAB4F !important;
-    color: whitesmoke !important;
+.nav_title {
+  font-family: "Fugaz One", cursive;
 }
 
-.btn-success,
-.btn-success:hover,
-.btn-success:active,
-.btn-success:visited {
-    background-color: #B6DADD !important; 
-    font-weight: 600 !important;
-    color: black !important;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+.btn-custom {
+  background-color: #3c6e71 !important;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
-
-/* Result Area */
-.result-area {
-    background-color: azure;
-    border-radius: 4px;
-    width: 100%;
-    height: 40vh;
-    box-shadow: 0px 4px 4px rgba(25, 59, 53, 0.96) !important;
+.btn-custom:hover {
+  background-color: #346264 !important;
 }
 
-.spa {
-    flex-wrap: wrap;
-    height: 100vh;
-    max-height: 100vh;
+.accordion-item,
+.accordion-button {
+  border-radius: 0 !important;
+  -webkit-border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+  -ms-border-radius: 0 !important;
+  -o-border-radius: 0 !important;
+}
+
+.accordion-button {
+  background-color: #d9d9d9 !important;
+}
+
+.accordion-button:focus {
+  box-shadow: none !important;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #212529 !important;
 }
