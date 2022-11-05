@@ -1,11 +1,14 @@
 package com.una.pp.urquerybackend.services;
 
-import com.una.pp.urquerybackend.data.DocumentRepository;
+import com.mongodb.MongoWriteException;
+import com.una.pp.urquerybackend.logic.XmlDocument;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -13,13 +16,10 @@ import java.io.FileReader;
 import java.io.IOException;
 
 @Service
-public class ServiceApp {
+public class DocumentService {
 
-    private DocumentRepository repository;
     @Autowired
-    public ServiceApp(DocumentRepository documentRepository){
-        this.repository = documentRepository;
-    }
+    private MongoRepository<XmlDocument, String> repository;
 
     public JSONObject about() throws IOException, ParseException { // method to load work team and course information
         JSONParser parser = new JSONParser();
@@ -30,13 +30,23 @@ public class ServiceApp {
     }
 
     public String search(String id) throws NotFoundException {   // method to search a document from the server
-        return repository.getDocuments()
-                .stream()
-                .filter(document -> document.getId().equals(id))
-                .findFirst()
+        return repository.findById(id)
                 .orElseThrow( () -> new NotFoundException())
                 .getData();
     }
 
+    public XmlDocument addDocument(XmlDocument document) throws MongoWriteException {
+        return this.repository.insert(document);
+    }
+
+    public XmlDocument updaDocument(XmlDocument document) throws NotFoundException {
+        XmlDocument found = this.repository.findById(document.getId())
+            .orElseThrow(() -> new NotFoundException());
+        
+        found.setData(document.getData());
+        found.setTitle(document.getTitle());
+        
+        return this.repository.save(found);
+    }
     
 }
