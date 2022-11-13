@@ -1,6 +1,7 @@
 package com.una.pp.urquerybackend.services;
 
 import com.mongodb.MongoWriteException;
+import com.una.pp.urquerybackend.logic.ScriptDocument;
 import com.una.pp.urquerybackend.logic.XmlDocument;
 
 import org.json.simple.JSONObject;
@@ -14,12 +15,15 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class DocumentService {
 
     @Autowired
     private MongoRepository<XmlDocument, String> repository;
+    @Autowired
+   // private MongoRepository<ScriptDocument, String> scriptRepository;
 
     public JSONObject about() throws IOException, ParseException { // method to load work team and course information
         JSONParser parser = new JSONParser();
@@ -48,5 +52,8 @@ public class DocumentService {
         
         return this.repository.save(found);
     }
-    
+
+    public List<XmlDocument> getAll() throws IOException, ParseException {
+        return this.repository.findAll();
+    }
 }

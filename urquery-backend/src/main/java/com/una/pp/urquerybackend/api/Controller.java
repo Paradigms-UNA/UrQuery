@@ -16,6 +16,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 
 import java.sql.Timestamp;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class Controller {
 
     private DocumentService service;
-    
     @Autowired
     public Controller(DocumentService service) {
         this.service = service;
@@ -96,4 +97,10 @@ public class Controller {
         }
         
     }
+    @RequestMapping(value = "/getAll")
+    public List<XmlDocument> getAll() throws IOException, ParseException {
+        return service.getAll();
+    }
+
+
 }
