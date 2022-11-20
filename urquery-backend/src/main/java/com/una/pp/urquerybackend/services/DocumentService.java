@@ -1,6 +1,8 @@
 package com.una.pp.urquerybackend.services;
 
 import com.mongodb.MongoWriteException;
+import com.una.pp.urquerybackend.UrqueryBackendApplication;
+import com.una.pp.urquerybackend.logic.Information;
 import com.una.pp.urquerybackend.logic.ScriptDocument;
 import com.una.pp.urquerybackend.logic.XmlDocument;
 
@@ -21,39 +23,64 @@ import java.util.List;
 public class DocumentService {
 
     @Autowired
-    private MongoRepository<XmlDocument, String> repository;
+    private MongoRepository<XmlDocument, String> xmlRepository;
     @Autowired
-   // private MongoRepository<ScriptDocument, String> scriptRepository;
+    private MongoRepository<ScriptDocument, String> scriptRepository;
 
-    public JSONObject about() throws IOException, ParseException { // method to load work team and course information
-        JSONParser parser = new JSONParser();
-        FileReader reader = new FileReader(new File("target/classes/data/group.json").getAbsolutePath()); // file location
-        Object obj = parser.parse(reader);
-        JSONObject pJsonObj = (JSONObject) obj;
-        return pJsonObj;
+    @Autowired
+    private MongoRepository<Information, String> infoRepository;
+
+    public List<Information> about() throws IOException, ParseException { // method to load work team and course information
+        return infoRepository.findAll();
     }
 
-    public String search(String id) throws NotFoundException {   // method to search a document from the server
-        return repository.findById(id)
+    public String searchXmlDocument(String id) throws NotFoundException {   // method to search an xml document from the server
+        return xmlRepository.findById(id)
                 .orElseThrow( () -> new NotFoundException())
                 .getData();
     }
 
-    public XmlDocument addDocument(XmlDocument document) throws MongoWriteException {
-        return this.repository.insert(document);
+    public String searchScriptDocument(String id) throws NotFoundException {   // method to search an script document from the server
+        return scriptRepository.findById(id)
+                .orElseThrow( () -> new NotFoundException())
+                .getData();
     }
 
-    public XmlDocument updaDocument(XmlDocument document) throws NotFoundException {
-        XmlDocument found = this.repository.findById(document.getId())
+    public XmlDocument addXmlDocument(XmlDocument document) throws MongoWriteException {
+        return this.xmlRepository.insert(document);
+    }
+
+    public ScriptDocument addScriptDocument(ScriptDocument document) throws MongoWriteException {
+        return this.scriptRepository.insert(document);
+    }
+
+    public XmlDocument updaXmlDocument(XmlDocument document) throws NotFoundException {
+        XmlDocument found = this.xmlRepository.findById(document.getId())
             .orElseThrow(() -> new NotFoundException());
         
         found.setData(document.getData());
         found.setTitle(document.getTitle());
         
-        return this.repository.save(found);
+        return this.xmlRepository.save(found);
     }
 
-    public List<XmlDocument> getAll() throws IOException, ParseException {
-        return this.repository.findAll();
+    public ScriptDocument updaScriptDocument(ScriptDocument document) throws NotFoundException {
+        ScriptDocument found = this.scriptRepository.findById(document.getId())
+                .orElseThrow(() -> new NotFoundException());
+
+        found.setData(document.getData());
+        found.setTitle(document.getTitle());
+
+        return this.scriptRepository.save(found);
     }
+
+    public List<XmlDocument> getAllXmlDocuments() throws IOException, ParseException {
+        return this.xmlRepository.findAll();
+    }
+
+    public List<ScriptDocument> getAllScriptDocuments() throws IOException, ParseException {
+        return this.scriptRepository.findAll();
+    }
+
 }
+
