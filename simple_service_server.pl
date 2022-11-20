@@ -11,6 +11,7 @@ Returns: {"accepted":true, "answer":Some_Number1+Some_Number2}    if data ok
 author: loriacarlos@gmail.com
 since: 2022
 */
+:- use_module('compiler/parser').
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
 :- use_module(library(http/http_json)).
@@ -23,10 +24,9 @@ since: 2022
 :- http_handler('/', home, []).
 
 
-
 handle_request(Request) :-
     http_read_json_dict(Request, Query),
-    solve(Query, Solution),
+    solve_urquery(Query, Solution),
     reply_json_dict(Solution).
 
 server(Port) :-
@@ -42,6 +42,25 @@ solve(_{a:X, b:Y}, _{status: true, answer:N, msg:'succeed'}) :-
     N is X + Y
 .
 solve(_, _{accepted: false, answer:0, msg:'Error: failed number validation'}).
+
+
+solve_urquery(_{script:Script}, _{accepted: true, target: Ast, msg: 'parsed successfully'} ):-
+    atom_codes(Script, Codes),
+    produce_atom_from_stream(Codes, Ast), !.
+
+solve_urquery(_, _{accepted: false, msg: 'error while parsing'} ).
+
+produce_atom_from_stream(Codes, O) :-
+    new_memory_file(Handle),
+    open_memory_file(Handle, write, InMemoryStream),
+    emit_something(InMemoryStream, Codes),
+    close(InMemoryStream),
+    memory_file_to_atom(Handle, O).
+  
+emit_something(InMemoryStream, Codes) :-
+    phrase(prog_urquery(O), Codes),
+    format(InMemoryStream, '~p', [O]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 home(_Request) :-
