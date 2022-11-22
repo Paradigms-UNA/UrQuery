@@ -1,3 +1,16 @@
+/*
+    UrQuery Parser
+    EIF400 - Programming Paradigms
+    Course's Project 
+    
+    Team 1 - 10am
+    Carlos Albornoz
+    Elias Arias
+    Joaquin Garcia
+    Jose Lopez
+    Julissa Seas 
+*/
+
 :- use_module(parser).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FROM UQ_TREE TO JS_TREE %%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -26,7 +39,8 @@ get_rside(call_func(Id, Arg1, Arg2), Rside):-
 
 get_rside(lambda(arg(Arg), Expr), Rside):-
     get_rside(Expr, OtherRside),
-    format(atom(Rside), '~p => ~p', [Arg, OtherRside]).
+    atom_string(OtherRside, StrRside),
+    format(atom(Rside), '~p => ~s', [Arg, StrRside]).
 
 emit_js(const(id(Id), Expr), Output):-
     get_rside(Expr, Rside),
@@ -35,10 +49,14 @@ emit_js(const(id(Id), Expr), Output):-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-test_emit :-
+test_emit_srcQuery :-
     open('output.js', write, Stream),
     to_js(src_query(uq_docpath(uq_expr(uq_id(uri))),xpath_expr("/li")), JsAst),
     emit_js(JsAst, Stream),
     close(Stream).
-    
+
+test_emit_lambda :-
+    open('output.js', write, Stream),
+    JsAst = const(id(ul_tag), lambda(arg(children), call_func(ur_tag, "ul", children))),
+    emit_js(JsAst, Stream),
+    close(Stream).
