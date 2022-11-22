@@ -1,15 +1,29 @@
-import Editor from "@monaco-editor/react";
+import Button from "react-bootstrap/Button";
+import { CodeEditor } from "./CodeEditor";
+import { useGlobalContext } from "../hooks/useGlobalContext";
 
-export const ResultArea = ({ res }) => {
+export const ResultArea = () => {
+  const { result, setResult } = useGlobalContext();
+
+  const onEditorsChange = (value) => {
+    setResult(value);
+  };
+
   return (
-    <Editor
-      // className="mt-1 mb-2 border border-2 rounded-3"
-      height="75vh"
-      width={`100%`}
-      language="xml"
-      theme="vs-dark"
-      options={{ wordWrap: "on", readOnly: true }}
-      value={res}
-    />
+    <>
+      <CodeEditor
+        language="javascript"
+        onChange={onEditorsChange}
+        textValue={result}
+        height="70vh"
+        readOnly={true}
+      />
+
+      <div className="d-flex flex-wrap justify-content-end gap-2 mt-3">
+        <Button variant="btn btn-custom" onClick={() => setResult("")}>
+          Clear
+        </Button>
+      </div>
+    </>
   );
 };

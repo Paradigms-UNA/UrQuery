@@ -14,6 +14,7 @@
  - Elias Arias Muñoz 
  - José López Cruz
  - Joaquín García Ramírez
+ - Julissa Seas Segura
  ### Date
  II Semester - 2022
 ***
