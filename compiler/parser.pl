@@ -17,16 +17,16 @@
 
 % progUrQuery -> letprog | urQuery;
 prog_urquery(urquery(UrQuery)) --> letprog(UrQuery), {!}.
-prog_urquery(urquery(UrQuery)) --> tagquery(UrQuery).
+prog_urquery(urquery(UrQuery)) --> tagquery(UrQuery, location(uq_expr(active_doc))).
 
 
 % letprog --> 'let' identifier '=' expr in urQuery (tagquery)
 letprog(let(X, E, in(UrQuery))) --> ws, "let", ws, id(X),
                                     {!}, ws, "=", ws, expr(E), ws,
-                                    "in", ws, tagquery(UrQuery), {!}.
+                                    "in", ws, tagquery(UrQuery, location(X)), {!}.
 
 
-tagquery(uq_tagquery(tag(Tag), For)) --> ws, "<", tag(Tag), ">",
+tagquery(uq_tagquery(tag(Tag), For, location(X)), location(X)) --> ws, "<", tag(Tag), ">",
                                          ws, forquery(For),
                                          ws, "</", tag(Tag), ">", {!}.
 
