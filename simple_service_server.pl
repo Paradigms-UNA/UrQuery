@@ -11,6 +11,8 @@ Returns: {"accepted":true, "answer":Some_Number1+Some_Number2}    if data ok
 author: loriacarlos@gmail.com
 since: 2022
 */
+:- use_module('compiler/parser').
+:- use_module('compiler/generator').
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
 :- use_module(library(http/http_json)).
@@ -19,14 +21,13 @@ since: 2022
 :- use_module(library(http/html_write)).
 
 % URL handlers.
-:- http_handler('/add', handle_request, [method(post)]).
+:- http_handler('/transpile', handle_request, [method(post)]).
 :- http_handler('/', home, []).
-
 
 
 handle_request(Request) :-
     http_read_json_dict(Request, Query),
-    solve(Query, Solution),
+    transpile(Query, Solution),
     reply_json_dict(Solution).
 
 server(Port) :-
@@ -35,13 +36,25 @@ server(Port) :-
 set_setting(http:logfile, 'service_log_file.log').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% BUSINESS LOGIC %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Calculates a + b.
-solve(_{a:X, b:Y}, _{status: true, answer:N, msg:'succeed'}) :-
-    number(X),
-    number(Y),!,
-    N is X + Y
-.
-solve(_, _{accepted: false, answer:0, msg:'Error: failed number validation'}).
+% Transpiles UrQuery Code to JavaScript Code
+transpile(_{script:Script}, _{accepted: true, target: Ast, msg: 'Transpiled successfully'} ):-
+    atom_codes(Script, Codes),
+    produce_atom_from_stream(Codes, Ast), !.
+
+transpile(_, _{accepted: false, msg: 'Syntax error'} ).
+
+produce_atom_from_stream(Codes, JsCode) :-
+    new_memory_file(Handle),
+    open_memory_file(Handle, write, InMemoryStream),
+    start_emision(InMemoryStream, Codes),
+    close(InMemoryStream),
+    memory_file_to_atom(Handle, JsCode).
+  
+start_emision(InMemoryStream, Codes) :-
+    phrase(prog_urquery(UqAst), Codes),
+    to_js(UqAst, JsAst),
+    emit_js(JsAst, InMemoryStream).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 home(_Request) :-
