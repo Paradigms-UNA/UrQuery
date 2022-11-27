@@ -1,6 +1,7 @@
 package com.una.pp.urquerybackend.api;
 
 import com.una.pp.urquerybackend.logic.DataCompile;
+import com.una.pp.urquerybackend.logic.ScriptDocument;
 import com.una.pp.urquerybackend.logic.XmlDocument;
 import com.una.pp.urquerybackend.services.PrologService;
 import com.una.pp.urquerybackend.services.DocumentService;
@@ -48,18 +49,19 @@ public class Controller {
     }
 
     @PostMapping(path = "/compile")
-    public JSONObject compile(@RequestBody DataCompile data) {  // method to analize the semanthic and sintaxis of a document
+    public JSONObject compile(@RequestBody ScriptDocument scriptDocument) {  // method to analize the semanthic and sintaxis of a document
 
         try {
-            if (PrologService.instance().connectionTest()) { // if the connection with the server is succesful
+                String jsCode = PrologService.instance().FromUqToJs(scriptDocument).getTarget();
+                if(jsCode != ""){
+                  scriptDocument.setTarget(jsCode);
+                  service.
+                }
                 Long datetime = System.currentTimeMillis();
                 Timestamp timestamp = new Timestamp(datetime);
                 JSONObject obj = new JSONObject();
-                String info = "" + timestamp + " " + data.getData();
-                obj.put("data", info);
+                obj.put("data", scriptDocument.getTarget());
                 return obj;
-            }
-            throw new Exception();
         } catch (Exception e) {
             throw new ResponseStatusException(
                 HttpStatus.INTERNAL_SERVER_ERROR, "No connection with Prolog Server", e);
