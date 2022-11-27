@@ -77,9 +77,10 @@ public class Controller {
                 JSONObject obj = new JSONObject();
                 obj.put("data", scriptDocument.getTarget());
                 return obj;
+            }else{
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "There is already compiled code");
             }
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "There is already compiled code");
         }
 
 
