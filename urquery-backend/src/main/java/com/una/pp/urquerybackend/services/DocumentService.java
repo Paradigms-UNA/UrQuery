@@ -26,7 +26,6 @@ public class DocumentService {
     private MongoRepository<XmlDocument, String> xmlRepository;
     @Autowired
     private MongoRepository<ScriptDocument, String> scriptRepository;
-
     @Autowired
     private MongoRepository<Information, String> infoRepository;
 
@@ -70,6 +69,7 @@ public class DocumentService {
 
         found.setData(document.getData());
         found.setTitle(document.getTitle());
+        found.setTarget(document.getTarget());
 
         return this.scriptRepository.save(found);
     }

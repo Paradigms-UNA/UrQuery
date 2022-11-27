@@ -2,6 +2,7 @@ package com.una.pp.urquerybackend.api;
 
 import com.una.pp.urquerybackend.logic.DataCompile;
 
+import com.una.pp.urquerybackend.logic.Information;
 import com.una.pp.urquerybackend.logic.ScriptDocument;
 import com.una.pp.urquerybackend.logic.XmlDocument;
 import com.una.pp.urquerybackend.services.PrologService;
@@ -17,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
+import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class Controller {
 
     private DocumentService service;
+
     @Autowired
     public Controller(DocumentService service) {
         this.service = service;
@@ -59,35 +62,34 @@ public class Controller {
     }
 
     @PostMapping(path = "/compile")
-    public JSONObject compile(@RequestBody ScriptDocument scriptDocument) {  // method to analize the semanthic and sintaxis of a document
+    public JSONObject compile(@RequestBody ScriptDocument scriptDocument) throws URISyntaxException, IOException, InterruptedException, NotFoundException {  // method to analize the semanthic and sintaxis of a document
 
-        try {
-                String jsCode = PrologService.instance().FromUqToJs(scriptDocument).getTarget();
-                if(jsCode != ""){
-                  scriptDocument.setTarget(jsCode);
-                  service.
+        System.out.println(scriptDocument.getTarget());
+            if (scriptDocument.getTarget() == null) {
+                String jsCode = PrologService.instance().FromUqToJs(scriptDocument.getData());
+                if (jsCode != "") {
+                    scriptDocument.setTarget(jsCode);
+                    this.service.updaScriptDocument(scriptDocument);
+                } else {
+                    throw new ResponseStatusException(
+                            HttpStatus.INTERNAL_SERVER_ERROR, "Syntax Error");
                 }
-                Long datetime = System.currentTimeMillis();
-                Timestamp timestamp = new Timestamp(datetime);
                 JSONObject obj = new JSONObject();
                 obj.put("data", scriptDocument.getTarget());
                 return obj;
-        } catch (Exception e) {
+            }
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "No connection with Prolog Server", e);
+                    HttpStatus.BAD_REQUEST, "There is already compiled code");
         }
-        
-    }
-    
+
 
     /**
      * Receives a document and adds it to the DB.
-     * 
-     * @throws ResponseStatusException if the document already exists compring by id
-     *      => It could throw an error if there are missing fields in the JSON. (this is not handled)
-     * 
+     *
      * @param document an XmlDocument instance
      * @return the new created document in the database.
+     * @throws ResponseStatusException if the document already exists compring by id
+     *                                 => It could throw an error if there are missing fields in the JSON. (this is not handled)
      */
     @PostMapping(path = "/xmlDocument")
     public XmlDocument insertXmlDocument(@RequestBody XmlDocument document) {
@@ -107,7 +109,7 @@ public class Controller {
         }
     }
 
-    @PutMapping(value="/xmlDocument/{id}")
+    @PutMapping(value = "/xmlDocument/{id}")
     public XmlDocument updaXmlDocument(@PathVariable String id, @RequestBody XmlDocument document) {
         try {
             document.setId(id);
@@ -115,10 +117,10 @@ public class Controller {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no such document", e);
         }
-        
+
     }
 
-    @PutMapping(value="/scriptDocument/{id}")
+    @PutMapping(value = "/scriptDocument/{id}")
     public ScriptDocument updaScriptlDocument(@PathVariable String id, @RequestBody ScriptDocument document) {
         try {
             document.setId(id);
@@ -128,6 +130,7 @@ public class Controller {
         }
 
     }
+
     @RequestMapping(value = "/getAllxmlDocuments")
     public List<XmlDocument> getAllxmlDocuments() throws IOException, ParseException {
         return service.getAllXmlDocuments();
