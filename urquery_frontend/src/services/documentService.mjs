@@ -1,6 +1,6 @@
 import httpCommon from "./httpCommon.mjs";
 
-const getAll = () => httpCommon.get("getAllxmlDocuments");
+const getAll = () => httpCommon.get("xmlDocument");
 
 const search = (id) => httpCommon.get(`xmlDocument/${id}`);
 

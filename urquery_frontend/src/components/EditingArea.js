@@ -29,8 +29,7 @@ export const EditingArea = () => {
     if (!script) return;
 
     setCurrentScript(script);
-
-    handleFormatXML(script.data, setCode);
+    setCode(script.data);
   };
 
   const handleSaveScript = () => {
