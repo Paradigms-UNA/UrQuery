@@ -8,7 +8,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import aboutService from "../service/aboutService";
+import aboutService from "../services/aboutService";
 
 import logo from "../assets/logo.png";
 
@@ -19,13 +19,18 @@ export const NavigationBar = () => {
   const handleClose = () => setShow(false);
 
   const makeRequest = async () => {
-    await aboutService
-      .getAbout()
-      .then((response) => response.data)
-      .then((data) => setAboutData(data))
-      .catch((err) =>
-        toast.error(`Error in the Request or connection: ${err}`)
-      );
+    try {
+      const response = await aboutService.getAbout();
+
+      if (response.status === "404" || response.status === "500") {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      setAboutData(response.data[0]);
+    } catch (err) {
+      toast.error(`Error in the Request or connection: ${err}`);
+    }
+
     setShow(true);
   };
 

@@ -1,6 +1,7 @@
 package com.una.pp.urquerybackend.api;
 
 import com.una.pp.urquerybackend.logic.DataCompile;
+
 import com.una.pp.urquerybackend.logic.ScriptDocument;
 import com.una.pp.urquerybackend.logic.XmlDocument;
 import com.una.pp.urquerybackend.services.PrologService;
@@ -35,14 +36,23 @@ public class Controller {
     }
 
     @GetMapping(path = "/about")
-    public JSONObject about() throws IOException, ParseException {  //method to load work team and course information
+    public List<Information> about() throws IOException, ParseException {  //method to load work team and course information
         return service.about(); // call to the service to execute the method about
     }
 
-    @RequestMapping(value = "document/{DDDD}")
-    public String search(@PathVariable String DDDD) { //method to search an specific dcoument stored in the server
+    @RequestMapping(value = "xmlDocument/{DDDD}")
+    public String searchXmlDocument(@PathVariable String DDDD) { //method to search an specific dcoument stored in the server
         try {
-            return service.search(DDDD); // call to the service to execute the method search
+            return service.searchXmlDocument(DDDD); // call to the service to execute the method search
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document Not Found", e);
+        }
+    }
+
+    @RequestMapping(value = "scriptDocument/{DDDD}")
+    public String searchScriptDocument(@PathVariable String DDDD) { //method to search an specific dcoument stored in the server
+        try {
+            return service.searchScriptDocument(DDDD); // call to the service to execute the method search
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document Not Found", e);
         }
@@ -79,30 +89,53 @@ public class Controller {
      * @param document an XmlDocument instance
      * @return the new created document in the database.
      */
-    @PostMapping(path = "/document")
-    public XmlDocument insertDocument(@RequestBody XmlDocument document) {
+    @PostMapping(path = "/xmlDocument")
+    public XmlDocument insertXmlDocument(@RequestBody XmlDocument document) {
         try {
-            return this.service.addDocument(document);
+            return this.service.addXmlDocument(document);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Repeated ID for document", e);
         }
     }
-    
-    
-    @PutMapping(value="/document/{id}")
-    public XmlDocument updaDocument(@PathVariable String id, @RequestBody XmlDocument document) {
+
+    @PostMapping(path = "/scriptDocument")
+    public ScriptDocument insertScriptDocument(@RequestBody ScriptDocument document) {
+        try {
+            return this.service.addScriptDocument(document);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Repeated ID for document", e);
+        }
+    }
+
+    @PutMapping(value="/xmlDocument/{id}")
+    public XmlDocument updaXmlDocument(@PathVariable String id, @RequestBody XmlDocument document) {
         try {
             document.setId(id);
-            return this.service.updaDocument(document);
+            return this.service.updaXmlDocument(document);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no such document", e);
         }
         
     }
-    @RequestMapping(value = "/getAll")
-    public List<XmlDocument> getAll() throws IOException, ParseException {
-        return service.getAll();
+
+    @PutMapping(value="/scriptDocument/{id}")
+    public ScriptDocument updaScriptlDocument(@PathVariable String id, @RequestBody ScriptDocument document) {
+        try {
+            document.setId(id);
+            return this.service.updaScriptDocument(document);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no such document", e);
+        }
+
+    }
+    @RequestMapping(value = "/getAllxmlDocuments")
+    public List<XmlDocument> getAllxmlDocuments() throws IOException, ParseException {
+        return service.getAllXmlDocuments();
     }
 
+    @RequestMapping(value = "/getAllscriptDocuments")
+    public List<ScriptDocument> getAllscriptDocuments() throws IOException, ParseException {
+        return service.getAllScriptDocuments();
+    }
 
 }
