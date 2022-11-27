@@ -1,14 +1,11 @@
 package com.una.pp.urquerybackend.api;
 
-import com.una.pp.urquerybackend.logic.DataCompile;
-
 import com.una.pp.urquerybackend.logic.Information;
 import com.una.pp.urquerybackend.logic.ScriptDocument;
 import com.una.pp.urquerybackend.logic.XmlDocument;
 import com.una.pp.urquerybackend.services.PrologService;
 import com.una.pp.urquerybackend.services.DocumentService;
 
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
@@ -19,13 +16,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 
 import java.net.URISyntaxException;
-import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
-
 
 @RequestMapping("api/una")
 @RestController
@@ -39,12 +34,14 @@ public class Controller {
     }
 
     @GetMapping(path = "/about")
-    public List<Information> about() throws IOException, ParseException {  //method to load work team and course information
+    public List<Information> about() throws IOException, ParseException { // method to load work team and course
+                                                                          // information
         return service.about(); // call to the service to execute the method about
     }
 
     @RequestMapping(value = "xmlDocument/{DDDD}")
-    public String searchXmlDocument(@PathVariable String DDDD) { //method to search an specific dcoument stored in the server
+    public String searchXmlDocument(@PathVariable String DDDD) { // method to search an specific dcoument stored in the
+                                                                 // server
         try {
             return service.searchXmlDocument(DDDD); // call to the service to execute the method search
         } catch (NotFoundException e) {
@@ -53,7 +50,8 @@ public class Controller {
     }
 
     @RequestMapping(value = "scriptDocument/{DDDD}")
-    public String searchScriptDocument(@PathVariable String DDDD) { //method to search an specific dcoument stored in the server
+    public String searchScriptDocument(@PathVariable String DDDD) { // method to search an specific dcoument stored in
+                                                                    // the server
         try {
             return service.searchScriptDocument(DDDD); // call to the service to execute the method search
         } catch (NotFoundException e) {
@@ -61,36 +59,41 @@ public class Controller {
         }
     }
 
+    //Request to the PrologService class the compilation of an UrQuery Script
     @PostMapping(path = "/compile")
-    public JSONObject compile(@RequestBody ScriptDocument scriptDocument) throws URISyntaxException, IOException, InterruptedException, NotFoundException {  // method to analize the semanthic and sintaxis of a document
+    public ScriptDocument compile(@RequestBody ScriptDocument scriptDocument)
+            throws URISyntaxException, IOException, InterruptedException, NotFoundException {
 
         System.out.println(scriptDocument.getTarget());
-            if (scriptDocument.getTarget() == null) {
-                String jsCode = PrologService.instance().FromUqToJs(scriptDocument.getData());
-                if (jsCode != "") {
-                    scriptDocument.setTarget(jsCode);
-                    this.service.updaScriptDocument(scriptDocument);
-                } else {
-                    throw new ResponseStatusException(
-                            HttpStatus.INTERNAL_SERVER_ERROR, "Syntax Error");
-                }
-                JSONObject obj = new JSONObject();
-                obj.put("data", scriptDocument.getTarget());
-                return obj;
-            }else{
+        if (scriptDocument.getTarget() == null) {
+            String jsCode = PrologService.instance().FromUqToJs(scriptDocument.getData());
+            if (jsCode != "") {
+                scriptDocument.setTarget(jsCode);
+                this.service.updaScriptDocument(scriptDocument);
+                return scriptDocument;
+            } else {
                 throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "There is already compiled code");
+                        HttpStatus.INTERNAL_SERVER_ERROR, "Syntax Error");
             }
         }
-
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "There is already compiled code");
+    }
 
     /**
      * Receives a document and adds it to the DB.
-     *
+     * 
+     * @throws ResponseStatusException if the document already exists compring by id
+     *                                 => It could throw an error if there are
+     *                                 missing fields in the JSON. (this is not
+     *                                 handled)
+     * 
      * @param document an XmlDocument instance
      * @return the new created document in the database.
      * @throws ResponseStatusException if the document already exists compring by id
-     *                                 => It could throw an error if there are missing fields in the JSON. (this is not handled)
+     *                                 => It could throw an error if there are
+     *                                 missing fields in the JSON. (this is not
+     *                                 handled)
      */
     @PostMapping(path = "/xmlDocument")
     public XmlDocument insertXmlDocument(@RequestBody XmlDocument document) {
@@ -132,12 +135,12 @@ public class Controller {
 
     }
 
-    @RequestMapping(value = "/getAllxmlDocuments")
+    @GetMapping(path = "/xmlDocument")
     public List<XmlDocument> getAllxmlDocuments() throws IOException, ParseException {
         return service.getAllXmlDocuments();
     }
 
-    @RequestMapping(value = "/getAllscriptDocuments")
+    @GetMapping(path = "/scriptDocument")
     public List<ScriptDocument> getAllscriptDocuments() throws IOException, ParseException {
         return service.getAllScriptDocuments();
     }

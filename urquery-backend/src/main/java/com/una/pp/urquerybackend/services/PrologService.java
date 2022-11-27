@@ -38,13 +38,11 @@ public class PrologService {
 
             HttpEntity entity = new HttpEntity<>(data, headers); // request is created
 
-            RestTemplate e = new RestTemplate(); // permit consume Resful services
-
             RestTemplate template = new RestTemplate(); // permit to consume Resful services
 
             HttpEntity<DataCompile> response = template.exchange(url, HttpMethod.POST, entity, DataCompile.class); // POST request is send
             DataCompile jsCode = response.getBody(); // the data compiled form Prolog is save in a dataCompile object
-                                                     // to be manipulate
+                                                     // to be manipulated
 
             target = "";
 
