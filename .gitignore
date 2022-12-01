@@ -26,7 +26,8 @@ yarn-error.log*
 
 HELP.md
 urquery-backend/target/**
-urquery-backend/src/resoruces/public/**
+resources
+resources/public
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

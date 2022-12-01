@@ -1,3 +1,16 @@
+/**
+ * @Project: UrQuery
+ * @course EIF 400 - Programming Paradigms
+ * @year 2022
+ * @authors: 
+ * Elias Arias Muñoz
+ * Jose Andres Lopez Cruz
+ * Carlos Albornoz Rondon
+ * Jose Joaquin Garcia Ramirez
+ * Julissa Seas Segura
+ * 
+ * @file ScriptDocument.java
+ */
 package com.una.pp.urquerybackend.logic;
 
 import com.mongodb.lang.NonNull;
