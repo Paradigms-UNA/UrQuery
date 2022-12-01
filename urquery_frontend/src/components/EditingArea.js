@@ -134,22 +134,6 @@ export const EditingArea = () => {
             Redisplay
           </Button>
 
-          <Button
-            variant="btn btn-custom"
-            onClick={() => {
-              console.log("EA Execute");
-            }}
-          >
-            Execute
-          </Button>
-
-          <Button
-            variant="btn btn-custom"
-            onClick={() => handleFormatXML(code, setCode)}
-          >
-            Format
-          </Button>
-
           <Button variant="btn btn-custom" onClick={handleSaveScript}>
             Save
           </Button>

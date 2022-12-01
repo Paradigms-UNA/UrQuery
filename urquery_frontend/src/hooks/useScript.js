@@ -66,9 +66,7 @@ export const useScript = () => {
         try {
           // Extract the id to send only the rest of the values
           const { id, ...rest } = currentScript;
-
-          handleFormatXML(rest.data, setCode);
-
+          
           const { data } = await scriptService.update(id, rest);
 
           setCurrentScript(data);
