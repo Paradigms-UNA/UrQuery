@@ -1,3 +1,23 @@
+/*
+
+UrQuery
+
+Autores:
+  Elias Arias Muñoz
+  Jose Andres Lopez Cruz
+  Carlos Albornoz Rondon
+  Jose Joaquin Garcia Ramirez
+  Julissa Seas Segura
+
+Curso:
+  Universidad Nacional
+  Facultad de Ciencias Exactas y Naturales
+  Escuela de Informática
+  EIF-400 Paradigmas de Programación
+  II ciclo, 2022
+  
+*/
+
 import React, { createContext, useState } from "react";
 import { toast } from "react-toastify";
 import formatXML from "xml-formatter";
@@ -8,11 +28,11 @@ export const GlobalProvider = ({ children }) => {
   const [code, setCode] = useState("");
   const [xml, setXml] = useState("");
   const [result, setResult] = useState("");
-  const [xmlDocuments, setXmlDocuments] = useState([]);
+  const [compiling, setCompiling] = useState(false);
   const [currentDocument, setCurrentDocument] = useState({});
-  const [scriptsList, setScriptsList] = useState([]);
   const [currentScript, setCurrentScript] = useState({});
-  const [hasCompile, setHasCompile] = useState(false);
+  const [xmlDocuments, setXmlDocuments] = useState([]);
+  const [scriptsList, setScriptsList] = useState([]);
 
   const handleFormatXML = (value, setValue) => {
     try {
@@ -24,22 +44,6 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  const showError = (statusCode) => {
-    console.log(statusCode);
-    let message = "";
-    switch (statusCode) {
-      case 404:
-        message = "Document Not Found";
-        break;
-      case 500:
-        message = "Prolog Connection Error";
-        break;
-      default:
-        message = "Unkown Error";
-    }
-    toast.error(message);
-  };
-
   const value = {
     code,
     setCode,
@@ -47,6 +51,8 @@ export const GlobalProvider = ({ children }) => {
     setXml,
     result,
     setResult,
+    compiling,
+    setCompiling,
     xmlDocuments,
     setXmlDocuments,
     currentDocument,
@@ -55,10 +61,7 @@ export const GlobalProvider = ({ children }) => {
     setScriptsList,
     currentScript,
     setCurrentScript,
-    showError,
     handleFormatXML,
-    hasCompile,
-    setHasCompile,
   };
 
   return (

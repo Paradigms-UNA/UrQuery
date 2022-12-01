@@ -1,24 +1,59 @@
-import React, { useState } from "react";
+/*
+
+UrQuery
+
+Autores:
+  Elias Arias Muñoz
+  Jose Andres Lopez Cruz
+  Carlos Albornoz Rondon
+  Jose Joaquin Garcia Ramirez
+  Julissa Seas Segura
+
+Curso:
+  Universidad Nacional
+  Facultad de Ciencias Exactas y Naturales
+  Escuela de Informática
+  EIF-400 Paradigmas de Programación
+  II ciclo, 2022
+  
+*/
+
+import React from "react";
 import Button from "react-bootstrap/Button";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useGlobalContext } from "../hooks/useGlobalContext";
 import { CodeEditor } from "./CodeEditor";
 import { useScript } from "../hooks/useScript";
+import { useCompile } from "../hooks/useCompile";
+
+import Spinner from "react-bootstrap/Spinner";
 
 export const EditingArea = () => {
-  const { code, setCode, currentScript, setCurrentScript, handleFormatXML } =
-    useGlobalContext();
-  const [compiling, setCompiling] = useState(false);
+  const {
+    code,
+    setCode,
+    setResult,
+    compiling,
+    currentScript,
+    setCurrentScript,
+    handleFormatXML,
+  } = useGlobalContext();
 
   const { scriptsList, editScript, saveScript } = useScript();
+
+  const { compile } = useCompile();
 
   const onEditorsChange = (value) => {
     setCode(value);
 
-    setCurrentScript((prev) => ({
-      ...prev,
-      data: value,
-    }));
+    setCurrentScript((prev) => {
+      if (!prev?.id) return {};
+
+      return {
+        ...prev,
+        data: value,
+      };
+    });
   };
 
   const handleViewScript = (e) => {
@@ -30,6 +65,7 @@ export const EditingArea = () => {
 
     setCurrentScript(script);
     setCode(script.data);
+    setResult("");
   };
 
   const handleSaveScript = () => {
@@ -41,27 +77,24 @@ export const EditingArea = () => {
     saveScript();
   };
 
+  const handleCompile = () => {
+    compile();
+  };
+
+  const handleRedisplay = () => {
+    if (currentScript?.target) {
+      setResult(currentScript.target);
+      return;
+    }
+
+    toast.error("The Script has not been compiled");
+  };
+
   const handleClearEditor = () => {
     setCurrentScript({});
     setCode("");
+    setResult("");
   };
-
-  /*   useLayoutEffect(() => {
-    //Validate is compiling
-
-    if (compiling) {
-      if (!!code) {
-        compileService
-          .compile(code)
-          .then((response) => setResult(response.data.data))
-          .then(setCompiling(false))
-          .catch((err) => showError(err.response.status));
-      } else {
-        setCompiling(false);
-        toast.error("There has to be code in Editing Area to compile");
-      }
-    }
-  }, [compiling, code, setResult, showError]); */
 
   return (
     <>
@@ -87,16 +120,17 @@ export const EditingArea = () => {
         </div>
 
         <div className="d-flex flex-wrap gap-2">
-          <Button variant="btn btn-custom" onClick={() => setCompiling(true)}>
-            {compiling ? "Compiling..." : "Compile"}
+          <Button variant="btn btn-custom" onClick={handleCompile}>
+            {compiling ? (
+              <>
+                <Spinner animation="border" size="sm" /> <span>Compiling</span>
+              </>
+            ) : (
+              "Compile"
+            )}
           </Button>
 
-          <Button
-            variant="btn btn-custom"
-            onClick={() => {
-              console.log("EA Redisplay");
-            }}
-          >
+          <Button variant="btn btn-custom" onClick={handleRedisplay}>
             Redisplay
           </Button>
 

@@ -18,11 +18,12 @@ Curso:
   
 */
 
-import axios from "axios";
+import httpCommon from "./httpCommon.mjs";
 
-export default axios.create({
-  baseURL: "http://localhost:8080/api/una",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const compile = (script) => httpCommon.post("compile", script);
+
+const compileService = {
+  compile,
+};
+
+export default compileService;
